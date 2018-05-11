@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+ ########################################
+ 话题Mapper
+ @author  nj
+ @version 1.0
+ @date 2018-05-03
+ ########################################
+-->
+<mapper namespace="com.hiboom.monent.back.microservice.dao.mapper.HbTopicMapper">
+    <!--
+      ########################################
+      hb_topic表名
+      @author  nj
+      @version 1.0
+      @date 2018-05-03
+      ########################################
+    -->
+    <sql id="tableName">
+        hb_topic
+    </sql>
+    <!--
+      ########################################
+      hb_topic表字段映射
+      @author  nj
+      @version 1.0
+      @date 2018-05-02
+      ########################################
+    -->
+    <sql id="field">
+        id AS id,
+        topic_path AS topicPath,
+        topic_name   AS topicName,
+        topic_content AS topicContent,
+        topic_browse AS topicBrowse,
+        topic_join AS topicJoin,
+        ctime AS ctime
+      </sql>
+    <!--
+      ########################################
+      hb_topic对应留言语言映射(一对多)
+      @author  nj
+      @version 1.0
+      @date 2018-05-06
+      ########################################
+     -->
+    <resultMap id="topicMaps" type="com.hiboom.monent.back.vo.TopicVO">
+        <id column="id" property="id"/>
+        <result column="topic_path" property="coverImg"/>
+        <result column="topic_name" property="title"/>
+        <result column="topic_content" property="content"/>
+        <result column="topic_browse" property="browse"/>
+        <result column="forward_amount" property="forwardAmount"/>
+        <collection property="topicVoiceList" ofType="com.hiboom.monent.back.vo.TopicVoiceVO" select="getTopicVOice"
+                    column="id">
+        </collection>
+    </resultMap>
+    <!--
+      ########################################
+      根据id查询指定用户
+      @author  nj
+      @version 1.0
+      @date 2018-04-25
+      ########################################
+    -->
+    <select id="load" parameterType="java.lang.Integer" resultType="com.hiboom.monent.back.entity.HbTopic">
+        select
+        <include refid="field"/>
+        from
+        <include refid="tableName"/>
+        where id = #{id}
+    </select>
+
+    <!--
+        ########################################
+   　	根据条件查询，返回list
+        @author  nj
+        @version 1.0
+        @date 2018-05-06
+        ########################################
+    -->
+    <select id="findAll" parameterType="map" resultType="com.hiboom.monent.back.entity.HbTopic">
+        select
+        <include refid="field"/>
+        from
+        <include refid="tableName"/>
+        order by id desc
+    </select>
+
+
+    <!--
+      ########################################
+　	  获取话题列表
+      @author  nj
+      @version 1.0
+      @date 2018-05-06
+      ########################################
+    -->
+    <select id="findAllTopic" parameterType="map" resultMap="topicMaps">
+        select
+        id,
+        topic_path,
+        topic_name,
+        topic_content,
+        topic_browse,
+        topic_join,
+        forward_amount,
+        DATE_FORMAT(
+        FROM_UNIXTIME(ctime),
+        '%Y年%m月%d日 %H:%m'
+        )AS ctime
+        from
+        <include refid="tableName"/>
+        WHERE status = 1
+        order by id desc
+    </select>
+
+    <!--
+      ########################################
+　	  获取话题留言列表
+      @author  nj
+      @version 1.0
+      @date 2018-05-06
+      ########################################
+    -->
+    <select id="getTopicVOice" parameterType="int" resultType="com.hiboom.monent.back.vo.TopicVoiceVO">
+        select
+        hb_customer_dynamic.id AS id,
+        hb_customer_dynamic.owner_voice AS voiceUrl,
+        hb_customer_dynamic.voice_time AS voiceTime,
+        hb_customer_dynamic.topic_like AS likeAmount,
+        hb_customer_dynamic.owner_id AS uid,
+        tp_userinfo.truename AS username,
+        hb_customer_dynamic.is_top AS isTop,
+        hb_customer_dynamic.label AS label
+        from
+        hb_customer_dynamic
+        LEFT JOIN tp_userinfo ON hb_customer_dynamic.owner_id = tp_userinfo.id
+        WHERE hb_customer_dynamic.topic_id = #{id} AND hb_customer_dynamic.status = 1
+        ORDER  BY hb_customer_dynamic.is_top desc, hb_customer_dynamic.topic_like desc
+        limit 5
+    </select>
+    <!--
+      ########################################
+      统计所有记录
+      @author  nj
+      @version 1.0
+      @date 2018-05-06
+      ########################################
+    -->
+    <select id="countAll" parameterType="map" resultType="java.lang.Integer">
+        select
+        COUNT(id)
+        from
+        <include refid="tableName"/>
+        WHERE status = 1
+    </select>
+    <!--
+       ########################################
+   　  新增话题
+       @author  nj
+       @version 1.0
+       @date 2018-05-06
+       ########################################
+    -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.hiboom.monent.back.entity.HbTopic">
+        <selectKey resultType="Integer" keyProperty="id" order="AFTER">
+            SELECT LAST_INSERT_ID() as id;
+        </selectKey>
+        insert into
+        <include refid="tableName"/>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="topicPath != null">
+                topic_path,
+            </if>
+            <if test="topicName != null">
+                topic_name,
+            </if>
+            <if test="topicContent != null">
+                topic_content,
+            </if>
+            <if test="topicBrowse != null">
+                topic_browse,
+            </if>
+            <if test="topicJoin != null">
+                topic_join,
+            </if>
+            <if test="ctime != null">
+                ctime
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="topicPath != null">
+                #{topicPath},
+            </if>
+            <if test="topicName != null">
+                #{topicName},
+            </if>
+            <if test="topicContent != null">
+                #{topicContent},
+            </if>
+            <if test="topicBrowse != null">
+                #{topicBrowse},
+            </if>
+            <if test="topicJoin != null">
+                #{topicJoin},
+            </if>
+            <if test="ctime != null">
+                #{ctime}
+            </if>
+        </trim>
+    </insert>
+    <!--
+      ########################################
+   　 修改话题
+      @author  nj
+      @version 1.0
+      @date 2018-05-06
+      ########################################
+    -->
+    <update id="update" parameterType="com.hiboom.monent.back.entity.HbTopic">
+        update hb_topic
+        <set>
+            <if test="topicPath != null">
+                topic_path = #{topicPath},
+            </if>
+            <if test="topicName != null">
+                topic_name = #{topicName},
+            </if>
+            <if test="topicContent != null">
+                topic_content = #{topicContent},
+            </if>
+            <if test="topicBrowse != null">
+                topic_browse = #{topicBrowse},
+            </if>
+            <if test="topicJoin != null">
+                topic_join = #{topicJoin},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <!--
+      ########################################
+   　 标记删除话题
+      @author  nj
+      @version 1.0
+      @date 2018-05-06
+      ########################################
+    -->
+    <update id="deleteById">
+        update hb_topic SET status = 0 where id = #{id}
+    </update>
+</mapper>

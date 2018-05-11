@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+ ########################################
+ 留言语言Mapper
+ @author  nj
+ @version 1.0
+ @date 2018-05-07
+ ########################################
+ -->
+<mapper namespace="com.hiboom.monent.back.microservice.dao.mapper.HbCustomerDynamicMapper">
+    <!--
+    ########################################
+    hb_customer_dynamic表名
+    @author  nj
+    @version 1.0
+    @date 2018-05-07
+    ########################################
+  　-->
+    <sql id="tableName">
+      hb_customer_dynamic
+    </sql>
+    <!--
+      ########################################
+      hb_customer_dynamic表字段映射
+      @author  nj
+      @version 1.0
+      @date 2018-05-06
+      ########################################
+    -->
+    <sql id="field">
+      id AS id,
+      owner_id AS ownerId,
+      dynamic_img AS dynamicImg,
+      owner_voice AS ownerVoice,
+      voice_time AS voiceTime,
+      comment_amount AS commentAmount,
+      sound_amount AS soundAmount,
+      is_top AS isTop,
+      topic_id AS topicId,
+      topic_like AS topicLike,
+      label AS label,
+      ctime AS ctime
+    </sql>
+    <!--
+     ########################################
+     根据id查询指定活动
+     @author  nj
+     @version 1.0
+     @date 2018-04-25
+     ########################################
+    -->
+    <select id="load" parameterType="java.lang.Integer" resultType="com.hiboom.monent.back.entity.HbCustomerDynamic">
+        select
+        <include refid="field"/>
+        from
+        <include refid="tableName"/>
+        where id = #{id}
+    </select>
+    <!--
+      ########################################
+      修改原来置顶变成不置顶
+      @author  nj
+      @version 1.0
+      @date 2018-05-06
+      ########################################
+   -->
+    <update id="updateNoTop" parameterType="java.lang.Integer">
+        update hb_customer_dynamic SET is_top = 0
+        where  topic_id = #{tid} AND is_top = 1
+    </update>
+    <!--
+      ########################################
+      修改留言动态
+      @author  nj
+      @version 1.0
+      @date 2018-05-06
+      ########################################
+   -->
+    <update id="update" parameterType="com.hiboom.monent.back.entity.HbCustomerDynamic">
+        update  <include refid="tableName"/>
+        <set>
+            <if test="isTop != null">
+                is_top = #{isTop},
+            </if>
+            <if test="label != null">
+                label = #{label}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+
+  <!--
+    ########################################
+    根据id标记删除留言
+    @author  nj
+    @version 1.0
+    @date 2018-05-07
+    ########################################
+  -->
+    <update id="deleteById" >
+        update <include refid="tableName"/> SET status = 0 where id = #{id}
+    </update>
+</mapper>

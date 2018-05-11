@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+ ########################################
+ 活动Mapper
+ @author  nj
+ @version 1.0
+ @date 2018-04-28
+ ########################################
+-->
+<mapper namespace="com.hiboom.monent.back.microservice.dao.mapper.HbActivityMapper">
+  <!--
+    ########################################
+    hb_activity表名
+    @author  nj
+    @version 1.0
+    @date 2018-04-28
+    ########################################
+　 -->
+    <sql id="tableName">
+      hb_activity
+    </sql>
+  <!--
+    ########################################
+　	hb_activity表字段映射
+    @author  nj
+    @version 1.0
+    @date 2017-07-05
+    ########################################
+  -->
+    <sql id="field">
+      id AS id,
+      image AS image,
+      cover_img AS coverImg,
+      title AS title,
+      price AS price,
+      address AS address,
+      join_min AS joinMin,
+      join_max AS joinMax,
+      `begin` AS `begin`,
+      `end` AS `end`,
+      tel AS tel,
+      content AS content,
+      content_img AS contentImg,
+      browse_amount AS browseAmount,
+      template_id AS templateId,
+      create_time AS createTime,
+      create_uid AS createUid,
+      status AS status
+    </sql>
+
+   <!--
+    ########################################
+    根据id查询指定活动
+    @author  nj
+    @version 1.0
+    @date 2018-04-25
+    ########################################
+   -->
+    <select id="load" parameterType="java.lang.Integer" resultType="com.hiboom.monent.back.entity.HbActivity">
+      select
+      <include refid="field" />
+      from
+      <include refid="tableName" />
+      where id = #{id}
+    </select>
+   <!--
+    ########################################
+    根据id删除活动
+    @author  nj
+    @version 1.0
+    @date 2018-04-25
+    ########################################
+   -->
+    <delete id="delete" parameterType="java.lang.Integer">
+      delete from hb_activity
+      where id = #{id}
+    </delete>
+   <!--
+    ########################################
+　  根据条件查询活动
+    @author  nj
+    @version 1.0
+    @date 2018-04-25
+    ########################################
+   -->
+    <select id="findAll"  parameterType="map" resultType="com.hiboom.monent.back.entity.HbActivity">
+      select
+      <include refid="field" />
+      from
+      <include refid="tableName" />
+    </select>
+
+
+
+  <!--
+   ########################################
+　 根据条件查询活动
+   @author  nj
+   @version 1.0
+   @date 2018-04-25
+   ########################################
+  -->
+    <select id="findAllActivity"  parameterType="map" resultType="com.hiboom.monent.back.vo.ActivityVO">
+      SELECT
+          hb_activity.id AS id,
+          hb_activity.create_uid AS createUid,
+          hb_activity.tel AS tel,
+          hb_activity.title AS title,
+          DATE_FORMAT(
+            FROM_UNIXTIME(hb_activity.`begin` / 1000),
+            '%Y%m%d %H:%m'
+          ) AS beginTime,
+            DATE_FORMAT(
+            FROM_UNIXTIME(hb_activity.`end` / 1000),
+            '%Y%m%d %H:%m'
+          ) AS endTime,
+          hb_activity.price AS price,
+          IF (isnull(hb_activity.template_id),0,hb_activity.template_id) AS templateId,
+          IF (isnull(hb_activity_template.title),'',hb_activity_template.title) AS tempTitle,
+          hb_activity.`status` AS `status`,
+          hb_activity.join_person AS joinPerson
+      FROM
+          hb_activity
+      LEFT JOIN hb_activity_template ON hb_activity.template_id = hb_activity_template.id
+      ORDER BY id DESC
+    </select>
+    <!--
+      ########################################
+      统计所有记录
+      @author  nj
+      @version 1.0
+      @date 2018-05-06
+      ########################################
+    -->
+    <select id="countAll" parameterType="map" resultType="java.lang.Integer">
+        select
+        COUNT(id)
+        from
+        <include refid="tableName"/>
+    </select>
+
+    <!--
+      ########################################
+   　 活动设置为退款状态
+      @author  nj
+      @version 1.0
+      @date 2018-05-10
+      ########################################
+    -->
+    <update id="deleteById">
+        update <include refid="tableName"/> SET status = 4  where id = #{id}
+    </update>
+</mapper>

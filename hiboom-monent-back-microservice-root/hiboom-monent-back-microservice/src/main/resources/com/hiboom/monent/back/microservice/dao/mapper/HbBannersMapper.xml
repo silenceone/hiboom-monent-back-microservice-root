@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+ ########################################
+ Banner Mapper
+ @author  nj
+ @version 1.0
+ @date 2018-05-06
+ ########################################
+-->
+<mapper namespace="com.hiboom.monent.back.microservice.dao.mapper.HbBannersMapper">
+    <!--
+     ########################################
+     hb_banners表名
+     @author  nj
+     @version 1.0
+     @date 2018-05-06
+     ########################################
+    -->
+    <sql id="tableName">
+      hb_banners
+    </sql>
+    <!--
+     ########################################
+     hb_banners表字段映射
+     @author  nj
+     @version 1.0
+     @date 2018-05-06
+     ########################################
+    -->
+    <sql id="field">
+      id AS id,
+      img AS img,
+      title AS title,
+      detail_img AS detailImg,
+      jump_url AS jumpUrl,
+      status AS status,
+      ctime AS ctime
+    </sql>
+    <!--
+      ########################################
+      根据id查询指定banner
+      @author  nj
+      @version 1.0
+      @date 2018-05-06
+      ########################################
+    -->
+    <select id="load" parameterType="java.lang.Integer" resultType="com.hiboom.monent.back.entity.HbBanners">
+        select
+        <include refid="field"/>
+        from
+        <include refid="tableName"/>
+        where id = #{id}
+    </select>
+
+    <!--
+      ########################################
+   　 根据条件查询，返回list
+      @author  nj
+      @version 1.0
+      @date 2018-05-06
+      ########################################
+    -->
+    <select id="findAll" parameterType="map" resultType="com.hiboom.monent.back.entity.HbBanners">
+        select
+        <include refid="field"/>
+        from
+        <include refid="tableName"/>
+        WHERE status = 1
+        order by id desc
+    </select>
+  <!--
+    ########################################
+    统计所有记录
+    @author  nj
+    @version 1.0
+    @date 2018-05-06
+    ########################################
+  -->
+    <select id="countAll" parameterType="map" resultType="java.lang.Integer">
+        select
+        COUNT(id)
+        from
+        <include refid="tableName"/>
+        WHERE status = 1
+    </select>
+    <!--
+      ########################################
+   　 新增Banner
+      @author  nj
+      @version 1.0
+      @date 2018-05-06
+      ########################################
+    -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.hiboom.monent.back.entity.HbBanners">
+        <selectKey resultType="Integer" keyProperty="id" order="AFTER">
+            SELECT LAST_INSERT_ID() as id;
+        </selectKey>
+        insert into <include refid="tableName"/>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="img != null">
+                img,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="detailImg != null">
+                detail_img,
+            </if>
+            <if test="jumpUrl != null">
+                jump_url,
+            </if>
+            <if test="ctime != null">
+                ctime
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="img != null">
+                #{img},
+            </if>
+            <if test="title != null">
+                #{title},
+            </if>
+            <if test="detailImg != null">
+                #{detailImg},
+            </if>
+            <if test="jumpUrl != null">
+                #{jumpUrl},
+            </if>
+            <if test="ctime != null">
+                #{ctime}
+            </if>
+        </trim>
+    </insert>
+
+    <!--
+      ########################################
+   　 修改banner
+      @author  nj
+      @version 1.0
+      @date 2018-05-06
+      ########################################
+    -->
+    <update id="update" parameterType="com.hiboom.monent.back.entity.HbBanners">
+        update <include refid="tableName"/>
+        <set>
+            <if test="img != null">
+                img = #{img},
+            </if>
+            <if test="title != null">
+                title = #{title},
+            </if>
+            <if test="detailImg != null">
+                detail_img = #{detailImg},
+            </if>
+            <if test="jumpUrl != null">
+                jump_url = #{jumpUrl}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--
+      ########################################
+   　 标记删除banner
+      @author  nj
+      @version 1.0
+      @date 2018-05-06
+      ########################################
+    -->
+    <update id="deleteById">
+        update <include refid="tableName"/> SET status = 0 where id = #{id}
+    </update>
+</mapper>

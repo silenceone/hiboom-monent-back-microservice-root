@@ -1,0 +1,12 @@
+server:
+  port: 9095
+spring:
+  application:
+    name: hiboom-monent-back-microservice
+  profiles:
+    active: dev
+logging:
+  file: ./springboot.log
+  config: classpath:logback.xml
+
+

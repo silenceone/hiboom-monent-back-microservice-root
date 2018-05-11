@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+ ########################################
+ 用户Mapper
+ @author  nj
+ @version 1.0
+ @date 2018-05-06
+ ########################################
+-->
+<mapper namespace="com.hiboom.monent.back.microservice.dao.mapper.TpUserinfoMapper">
+    <!--
+      ########################################
+      hb_activity表名
+      @author  nj
+      @version 1.0
+      @date 2018-05-07
+      ########################################
+  　-->
+    <sql id="tableName">
+      tp_userinfo
+    </sql>
+    <!--
+      ########################################
+      tp_userinfo表名
+      @author  nj
+      @version 1.0
+      @date 2018-05-07
+      ########################################
+  　-->
+    <sql id="field">
+      id AS uid,
+      tel AS tel,
+      balance AS hiBalance,
+      yue AS accountBalance,
+      DATE_FORMAT(FROM_UNIXTIME(regtime),'%Y%m%d %H:%m') AS regtime
+    </sql>
+    <!--
+     ########################################
+ 　  根据条件查询活动
+     @author  nj
+     @version 1.0
+     @date 2018-04-25
+     ########################################
+    -->
+    <select id="findAll"  parameterType="map" resultType="com.hiboom.monent.back.vo.MonentUserVO">
+        select
+        <include refid="field" />
+        from
+        <include refid="tableName" />
+    </select>
+    <!--
+      ########################################
+      统计所有用户记录
+      @author  nj
+      @version 1.0
+      @date 2018-05-08
+      ########################################
+    -->
+    <select id="countAll" parameterType="map" resultType="java.lang.Integer">
+        select
+        COUNT(id)
+        from
+        <include refid="tableName"/>
+    </select>
+
+    <!--
+      ########################################
+      hb_room用户信息一对多标签
+      @author  nj
+      @version 1.0
+      @date 2018-05-06
+      ########################################
+     -->
+    <resultMap id="userMaps"  type="com.hiboom.monent.back.vo.MonentUserDetailVO">
+        <id column="id" property="uid"/>
+        <result column="owner_name" property="name"/>
+        <result column="owner_sex" property="sex"/>
+        <result column="owner_age" property="age"/>
+        <result column="owner_profession" property="profession"/>
+        <result column="owner_address" property="city"/>
+        <result column="spare_time" property="spareTime"/>
+        <result column="owner_price" property="price"/>
+        <result column="owner_signature" property="signature"/>
+        <collection property="labels" ofType="java.lang.String" select="getLabels" column="id"></collection>
+    </resultMap>
+
+    <!--
+     ########################################
+ 　  根据id查询用户详情
+     @author  nj
+     @version 1.0
+     @date 2018-04-25
+     ########################################
+    -->
+    <select id="getUserDetail"  parameterType="java.lang.Integer" resultMap="userMaps">
+        SELECT
+            id,
+            owner_name,
+            owner_sex,
+            owner_age,
+            owner_profession,
+            owner_address,
+            spare_time,
+            owner_price,
+            owner_signature
+        FROM
+            hb_room
+        WHERE owner_id = #{uid}
+    </select>
+
+    <!--
+      ########################################
+　	  获取标签言列表
+      @author  nj
+      @version 1.0
+      @date 2018-05-08
+      ########################################
+    -->
+    <select id="getLabels" parameterType="int" resultType="java.lang.String">
+        SELECT
+            hb_tags.tags_name
+        FROM
+            hb_room_tags_association
+        LEFT JOIN hb_tags ON hb_room_tags_association.tags_id = hb_tags.id
+        WHERE hb_room_tags_association.room_id = #{id}
+    </select>
+
+    <!--
+      ########################################
+   　 给用户充值
+      @author  nj
+      @version 1.0
+      @date 2018-05-06
+      ########################################
+    -->
+    <update id="recharge">
+        update tp_userinfo SET balance = balance + #{amount} where id = #{uid}
+    </update>
+</mapper>

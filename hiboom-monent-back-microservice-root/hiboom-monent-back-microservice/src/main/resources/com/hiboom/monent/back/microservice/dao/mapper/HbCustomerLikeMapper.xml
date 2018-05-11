@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+ ########################################
+ 喜欢Mapper
+ @author  nj
+ @version 1.0
+ @date 2018-04-28
+ ########################################
+-->
+<mapper namespace="com.hiboom.monent.back.microservice.dao.mapper.HbCustomerLikeMapper">
+    <!--
+      ########################################
+      hb_customer_like表名
+      @author  nj
+      @version 1.0
+      @date 2018-04-28
+      ########################################
+  　 -->
+    <sql id="tableName">
+      hb_customer_like
+    </sql>
+    <!--
+      ########################################
+      hb_customer_like表字段映射
+      @author  nj
+      @version 1.0
+      @date 2018-05-11
+      ########################################
+    -->
+    <sql id="field">
+      id AS id,
+      uid AS uid,
+      room_owner_id AS roomOwnerId
+    </sql>
+    <!--
+      ########################################
+    　查找关注我的人
+      @author  nj
+      @version 1.0
+      @date 2018-05-11
+      ########################################
+    -->
+    <select id="findbeCares" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        SELECT
+            uid
+        FROM
+            hb_customer_like
+        WHERE
+            room_owner_id = #{uid}
+    </select>
+    <!--
+      ########################################
+      查找我关注的人
+      @author  nj
+      @version 1.0
+      @date 2018-05-11
+      ########################################
+     -->
+    <select id="findCares" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        SELECT
+             room_owner_id
+        FROM
+            hb_customer_like
+        WHERE
+            uid = #{uid}
+    </select>
+</mapper>

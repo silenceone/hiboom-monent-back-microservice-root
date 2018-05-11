@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.3.100:3306/ua_db?useUnicode=true&characterEncoding=utf8&characterSetResults=utf8&allowMultiQueries=true&useSSL=false
+    username: root
+    password: fcs123#@!EWQ
+
+eureka:
+  instance:
+    ip-address: 192.168.3.100
+    prefer-ip-address: true
+jwt:
+  pri-key:
+    path: /opt/hiboom-monent-back-microservice/pri.key
+  pub-key:
+    path: /opt/hiboom-monent-back-microservice/pub.key
+  expire: 36000

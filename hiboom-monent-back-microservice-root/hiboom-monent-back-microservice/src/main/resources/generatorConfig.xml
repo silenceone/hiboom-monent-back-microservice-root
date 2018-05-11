@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+
+    <!--MySQL连接驱动-->
+    <classPathEntry location="C:\\Users\\wujj\\.m2\\repository\\mysql\\mysql-connector-java\\5.1.44\\mysql-connector-java-5.1.44.jar"/>
+
+    <!--数据库链接URL，用户名、密码 -->
+    <context id="MySQL" targetRuntime="MyBatis3">
+        <commentGenerator>
+            <property name="suppressDate" value="true"/>
+            <!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://192.168.3.100:3306/ua_db"
+                        userId="root"
+                        password="fcs123#@!EWQ">
+        </jdbcConnection>
+
+        <!--是否启用java.math.BigDecimal-->
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+        <!-- 数据表对应的model层  -->
+        <javaModelGenerator targetPackage="com.hiboom.monent.back.entity" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+        <!-- sql mapper 映射配置文件 -->
+        <sqlMapGenerator targetPackage="com.hiboom.monent.back.microservice.dao.mapper"
+                         targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+        <!-- mybatis3中的mapper接口 -->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.hiboom.monent.back.microservice.dao.mapper"
+                             targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <table tableName="hb_transaction_seq" enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
+        </table>
+
+    </context>
+</generatorConfiguration>

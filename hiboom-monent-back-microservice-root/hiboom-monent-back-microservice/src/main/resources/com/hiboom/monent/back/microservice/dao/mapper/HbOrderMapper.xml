@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+ ########################################
+ 邀请订单Mapper
+ @author  nj
+ @version 1.0
+ @date 2018-05-03
+ ########################################
+-->
+<mapper namespace="com.hiboom.monent.back.microservice.dao.mapper.HbOrderMapper">
+    <!--
+      ########################################
+      hb_order表名
+      @author  nj
+      @version 1.0
+      @date 2018-05-10
+      ########################################
+    -->
+    <sql id="tableName">
+       hb_topic
+    </sql>
+    <!--
+      ########################################
+      hb_topic表字段映射
+      @author  nj
+      @version 1.0
+      @date 2018-05-10
+      ########################################
+    -->
+    <sql id="field">
+        id AS id,
+        order_id AS orderId,
+        byrent_id AS byrentId,
+        rent_id AS rentId,
+        rent_time AS rentTime,
+        rent_address AS rentAddress,
+        rent_spend AS rentSpend,
+        amount AS amount,
+        status AS status,
+        create_time AS createTime,
+        accept_time AS acceptTime,
+        time_out AS timeOut,
+        is_read AS isRead,
+        appoint_day AS appointDay,
+        appoint_range AS appointRange,
+        pack_id AS packId,
+        ctime AS ctime
+    </sql>
+
+    <!--
+     ########################################
+ 　  根据条件查询订单
+     @author  nj
+     @version 1.0
+     @date 2018-04-25
+     ########################################
+    -->
+    <select id="findAllOrder"  parameterType="map" resultType="com.hiboom.monent.back.vo.OrderVO">
+        SELECT
+            hb_order.rent_id AS byrentId,
+            hb_order.byrent_id AS rentId,
+
+        IF (
+            isnull(hb_pack.title),
+            '',
+            hb_pack.title
+        ) AS pack,
+         hb_order.rent_time AS rentTime,
+         hb_order.amount AS amount,
+         DATE_FORMAT(
+            FROM_UNIXTIME(hb_order.create_time / 1000),
+            '%Y%m%d %H:%m'
+        ) AS createTime,
+
+        IF (
+            isnull(hb_order.time_out),
+            '',
+            DATE_FORMAT(
+                FROM_UNIXTIME(hb_order.time_out / 1000),
+                '%Y%m%d %H:%m'
+            )
+        ) AS timeOut,
+         hb_order.rent_spend AS rentSpend,
+         hb_order.`status` AS STATUS
+        FROM
+            hb_order
+        LEFT JOIN hb_pack ON hb_pack.id = hb_order.pack_id
+        ORDER BY
+            hb_order.create_time DESC
+    </select>
+    <!--
+      ########################################
+      统计所有记录
+      @author  nj
+      @version 1.0
+      @date 2018-05-06
+      ########################################
+    -->
+    <select id="countAll" parameterType="map" resultType="java.lang.Integer">
+        select
+        COUNT(id)
+        from
+        <include refid="tableName"/>
+        WHERE status = 1
+    </select>
+
+    <!--
+       ########################################
+     　我租过的人
+       @author  nj
+       @version 1.0
+       @date 2018-05-11
+       ########################################
+     -->
+    <select id="findRents" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+       SELECT
+            byrent_id
+        FROM
+            hb_order
+        WHERE
+            rent_id = #{uid}
+    </select>
+
+    <!--
+       ########################################
+     　租过我的人
+       @author  nj
+       @version 1.0
+       @date 2018-05-11
+       ########################################
+     -->
+    <select id="findbeRents" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        SELECT
+             rent_id
+        FROM
+             hb_order
+        WHERE
+             byrent_id = #{uid}
+    </select>
+
+</mapper>

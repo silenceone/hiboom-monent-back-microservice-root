@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+ ########################################
+ 后台用户Mapper
+ @author  nj
+ @version 1.0
+ @date 2018-05-02
+ ########################################
+-->
+<mapper namespace="com.hiboom.monent.back.microservice.dao.mapper.HbSystemUserMapper">
+  <!--
+    ########################################
+    hb_admin_user表名
+    @author  nj
+    @version 1.0
+    @date 2018-05-02
+    ########################################
+  -->
+      <sql id="tableName">
+        hb_system_user
+      </sql>
+  <!--
+     ########################################
+     hb_admin_user表字段映射
+     @author  nj
+     @version 1.0
+     @date 2018-05-02
+     ########################################
+   -->
+      <sql id="field">
+        uid AS uid,
+        username AS username,
+        `name`   AS `name`,
+        password AS password,
+        gender AS gender,
+        age AS age,
+        portrait AS portrait,
+        `position` AS `position`,
+        ctime AS ctime
+      </sql>
+   <!--
+     ########################################
+     根据id查询指定用户
+     @author  nj
+     @version 1.0
+     @date 2018-04-25
+     ########################################
+   -->
+      <select id="load" parameterType="java.lang.Integer" resultType="com.hiboom.monent.back.entity.HbSystemUser">
+        select
+        <include refid="field"/>
+        from
+        <include refid="tableName"/>
+        where id = #{id}
+      </select>
+
+    <!--
+      ########################################
+      根据登录名查询指定用户
+      @author  nj
+      @version 1.0
+      @date 2018-04-25
+      ########################################
+   -->
+    <select id="findByName" parameterType="java.lang.String" resultType="com.hiboom.monent.back.entity.HbSystemUser">
+        select
+        <include refid="field"/>
+        from
+        <include refid="tableName"/>
+        where username = #{username}
+    </select>
+    <!--
+      ########################################
+      根据id删除用户
+      @author  nj
+      @version 1.0
+      @date 2018-04-25
+      ########################################
+    -->
+       <delete id="delete" parameterType="java.lang.Integer">
+          delete from  <include refid="tableName"/>  where uid = #{uid}
+        </delete>
+    <!--
+     ########################################
+  　 插入hb_admin_user表
+     @author  nj
+     @version 1.0
+     @date 2018-04-25
+     ########################################
+   -->
+      <insert id="insert" useGeneratedKeys="true" keyProperty="uid" parameterType="com.hiboom.monent.back.entity.HbSystemUser">
+        <selectKey resultType="Integer" keyProperty="uid" order="AFTER">
+          SELECT LAST_INSERT_ID() as uid;
+        </selectKey>
+        insert into <include refid="tableName"/>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+          <if test="uid != null">
+              uid,
+          </if>
+          <if test="username != null">
+              username,
+          </if>
+          <if test="name != null">
+              `name`,
+          </if>
+          <if test="password != null">
+              password,
+          </if>
+          <if test="gender != null">
+              gender,
+          </if>
+          <if test="age != null">
+              age,
+          </if>
+          <if test="portrait != null">
+              portrait,
+          </if>
+          <if test="position != null">
+            `position`,
+          </if>
+          <if test="ctime != null">
+              ctime
+          </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+          <if test="uid != null">
+              #{uid},
+          </if>
+          <if test="username != null">
+              #{username},
+          </if>
+          <if test="name != null">
+              #{name},
+          </if>
+          <if test="password != null">
+             #{password},
+          </if>
+          <if test="gender != null">
+             #{gender},
+          </if>
+          <if test="age != null">
+             #{age},
+          </if>
+          <if test="portrait != null">
+              #{portrait},
+          </if>
+          <if test="position != null">
+              #{position},
+          </if>
+          <if test="ctime != null">
+              #{ctime}
+          </if>
+        </trim>
+      </insert>
+   <!--
+     ########################################
+     根据用户Uid修改用户信息
+     @author  nj
+     @version 1.0
+     @date 2018-05-02
+     ########################################
+  -->
+      <update id="update" parameterType="com.hiboom.monent.back.entity.HbSystemUser">
+        update <include refid="tableName"/>
+        <set>
+          <if test="username != null">
+              username = #{username},
+          </if>
+          <if test="name != null">
+              `name` = #{name},
+           </if>
+          <if test="password != null">
+              password = #{password},
+          </if>
+          <if test="gender != null">
+              gender = #{gender},
+          </if>
+          <if test="age != null">
+              age = #{age},
+          </if>
+          <if test="portrait != null">
+              portrait = #{portrait},
+          </if>
+          <if test="position != null">
+             `position` = #{position},
+          </if>
+          <if test="status != null">
+             status = #{status},
+          </if>
+        </set>
+        where uid = #{uid}
+      </update>
+
+</mapper>

@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hiboom.monent.back.microservice.dao.mapper.HbTransactionSeqMapper">
+  <resultMap id="BaseResultMap" type="com.hiboom.monent.back.entity.HbTransactionSeq">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="uid" jdbcType="INTEGER" property="uid" />
+    <result column="seq_sn" jdbcType="CHAR" property="seqSn" />
+    <result column="seq_type" jdbcType="INTEGER" property="seqType" />
+    <result column="amount" jdbcType="DECIMAL" property="amount" />
+    <result column="amount_type" jdbcType="SMALLINT" property="amountType" />
+    <result column="pre_hi_amount" jdbcType="DECIMAL" property="preHiAmount" />
+    <result column="pre_cash_amount" jdbcType="DECIMAL" property="preCashAmount" />
+    <result column="hi_amount" jdbcType="DECIMAL" property="hiAmount" />
+    <result column="cash_amount" jdbcType="DECIMAL" property="cashAmount" />
+    <result column="identify_id" jdbcType="INTEGER" property="identifyId" />
+    <result column="note" jdbcType="VARCHAR" property="note" />
+    <result column="ctime" jdbcType="INTEGER" property="ctime" />
+    <result column="etime" jdbcType="TIMESTAMP" property="etime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, uid, seq_sn, seq_type, amount, amount_type, pre_hi_amount, pre_cash_amount, hi_amount, 
+    cash_amount, identify_id, note, ctime, etime
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from hb_transaction_seq
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from hb_transaction_seq
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hiboom.monent.back.entity.HbTransactionSeq">
+    insert into hb_transaction_seq (id, uid, seq_sn, 
+      seq_type, amount, amount_type, 
+      pre_hi_amount, pre_cash_amount, hi_amount, 
+      cash_amount, identify_id, note, 
+      ctime, etime)
+    values (#{id,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, #{seqSn,jdbcType=CHAR}, 
+      #{seqType,jdbcType=INTEGER}, #{amount,jdbcType=DECIMAL}, #{amountType,jdbcType=SMALLINT}, 
+      #{preHiAmount,jdbcType=DECIMAL}, #{preCashAmount,jdbcType=DECIMAL}, #{hiAmount,jdbcType=DECIMAL}, 
+      #{cashAmount,jdbcType=DECIMAL}, #{identifyId,jdbcType=INTEGER}, #{note,jdbcType=VARCHAR}, 
+      #{ctime,jdbcType=INTEGER}, #{etime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hiboom.monent.back.entity.HbTransactionSeq">
+    insert into hb_transaction_seq
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="uid != null">
+        uid,
+      </if>
+      <if test="seqSn != null">
+        seq_sn,
+      </if>
+      <if test="seqType != null">
+        seq_type,
+      </if>
+      <if test="amount != null">
+        amount,
+      </if>
+      <if test="amountType != null">
+        amount_type,
+      </if>
+      <if test="preHiAmount != null">
+        pre_hi_amount,
+      </if>
+      <if test="preCashAmount != null">
+        pre_cash_amount,
+      </if>
+      <if test="hiAmount != null">
+        hi_amount,
+      </if>
+      <if test="cashAmount != null">
+        cash_amount,
+      </if>
+      <if test="identifyId != null">
+        identify_id,
+      </if>
+      <if test="note != null">
+        note,
+      </if>
+      <if test="ctime != null">
+        ctime,
+      </if>
+      <if test="etime != null">
+        etime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="uid != null">
+        #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="seqSn != null">
+        #{seqSn,jdbcType=CHAR},
+      </if>
+      <if test="seqType != null">
+        #{seqType,jdbcType=INTEGER},
+      </if>
+      <if test="amount != null">
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="amountType != null">
+        #{amountType,jdbcType=SMALLINT},
+      </if>
+      <if test="preHiAmount != null">
+        #{preHiAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="preCashAmount != null">
+        #{preCashAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="hiAmount != null">
+        #{hiAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="cashAmount != null">
+        #{cashAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="identifyId != null">
+        #{identifyId,jdbcType=INTEGER},
+      </if>
+      <if test="note != null">
+        #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="ctime != null">
+        #{ctime,jdbcType=INTEGER},
+      </if>
+      <if test="etime != null">
+        #{etime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hiboom.monent.back.entity.HbTransactionSeq">
+    update hb_transaction_seq
+    <set>
+      <if test="uid != null">
+        uid = #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="seqSn != null">
+        seq_sn = #{seqSn,jdbcType=CHAR},
+      </if>
+      <if test="seqType != null">
+        seq_type = #{seqType,jdbcType=INTEGER},
+      </if>
+      <if test="amount != null">
+        amount = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="amountType != null">
+        amount_type = #{amountType,jdbcType=SMALLINT},
+      </if>
+      <if test="preHiAmount != null">
+        pre_hi_amount = #{preHiAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="preCashAmount != null">
+        pre_cash_amount = #{preCashAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="hiAmount != null">
+        hi_amount = #{hiAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="cashAmount != null">
+        cash_amount = #{cashAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="identifyId != null">
+        identify_id = #{identifyId,jdbcType=INTEGER},
+      </if>
+      <if test="note != null">
+        note = #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="ctime != null">
+        ctime = #{ctime,jdbcType=INTEGER},
+      </if>
+      <if test="etime != null">
+        etime = #{etime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hiboom.monent.back.entity.HbTransactionSeq">
+    update hb_transaction_seq
+    set uid = #{uid,jdbcType=INTEGER},
+      seq_sn = #{seqSn,jdbcType=CHAR},
+      seq_type = #{seqType,jdbcType=INTEGER},
+      amount = #{amount,jdbcType=DECIMAL},
+      amount_type = #{amountType,jdbcType=SMALLINT},
+      pre_hi_amount = #{preHiAmount,jdbcType=DECIMAL},
+      pre_cash_amount = #{preCashAmount,jdbcType=DECIMAL},
+      hi_amount = #{hiAmount,jdbcType=DECIMAL},
+      cash_amount = #{cashAmount,jdbcType=DECIMAL},
+      identify_id = #{identifyId,jdbcType=INTEGER},
+      note = #{note,jdbcType=VARCHAR},
+      ctime = #{ctime,jdbcType=INTEGER},
+      etime = #{etime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
