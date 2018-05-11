@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/hiboom-monent-back-api/hiboom-monent-back-api.iml" filepath="$PROJECT_DIR$/hiboom-monent-back-api/hiboom-monent-back-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hiboom-monent-back-microservice/hiboom-monent-back-microservice.iml" filepath="$PROJECT_DIR$/hiboom-monent-back-microservice/hiboom-monent-back-microservice.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hiboom-monent-back-microservice-root.iml" filepath="$PROJECT_DIR$/hiboom-monent-back-microservice-root.iml" />
+    </modules>
+  </component>
+</project>
